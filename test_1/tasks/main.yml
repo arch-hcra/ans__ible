@@ -1,0 +1,5 @@
+---
+# tasks file for test_1
+- name: change timezone is EU/MSK
+  timezone:
+    name: Europe/Moscow
