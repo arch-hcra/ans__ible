@@ -1,5 +1,8 @@
 ---
 # tasks file for test_1
-- name: change timezone is EU/MSK
-  timezone:
-    name: Europe/Moscow
+
+- name: update apt
+  apt:
+    update_cache: yes
+  become: yes
+  become_user: root

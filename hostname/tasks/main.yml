@@ -1,4 +1,0 @@
----
-# tasks file for hostname
-- name: change name for hosts
-  shell: hostnamectl set-hostname stage123
