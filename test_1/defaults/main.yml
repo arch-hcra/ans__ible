@@ -1,8 +1,5 @@
 ---
-swap_size: 1G
-
-user_name: "admin2"
-user_password: "riomust68"
-user_shell: "/bin/bash"
-user_group: []
-user_home: "/home/{{user_name}}"
+#packages:
+#   - git
+#   - htop
+#   - wget
