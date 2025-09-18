@@ -16,19 +16,39 @@
 #    - "{{ packages }}"
 #  become: yes
 #  become_user: root
-- name: get swap path
-  shell: swapon --show
-  register: swap_path
+#- name: get swap path
+#  shell: swapon --show
+#  register: swap_path
 
-- name: print swap path
-  debug:
-    var: swap_path
+#- name: print swap path
+#  debug:
+#    var: swap_path
 
-- name: load average
-  shell: 'uptime | awk -F"load average: " "{print \$2}"'
-  register: uptime_average
+#- name: load average
+#  shell: 'uptime | awk -F"load average: " "{print \$2}"'
+#  register: uptime_average
 
-- name: print load average with label
-  debug:
-    msg: "load average: {{ uptime_average.stdout }}"
+#- name: print load average with label
+#  debug:
+#    msg: "load average: {{ uptime_average.stdout }}"
 
+- name: Gather swap info
+  command: swapon --show --noheadings --raw
+  register: swapon_output
+
+- name: Extract swap paths only
+  set_fact:
+    swap_list: "{{ swapon_output.stdout_lines | map('split') | map('first') | list }}"
+
+- name: Disable all swap
+  command: swapoff {{ item }}
+  loop: "{{ swap_list }}"
+  when: swap_list | length > 0
+  become: yes
+
+- name: Remove swap files (only those that are regular files)
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop: "{{ swap_list }}"
+  when: swap_list | length > 0 and (item is file)
